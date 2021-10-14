@@ -56,37 +56,28 @@ public class RegQuery {
 
 
     public static String rotar(String cadenaOriginal, int rotaciones) {
-        // En ASCII, la a es 97, b 98, A 65, B 66, etcétera
         final int LONGITUD_ALFABETO = 26, INICIO_MINUSCULAS = 97, INICIO_MAYUSCULAS = 65;
-        String cadenaRotada = ""; // La cadena nueva, la que estará rotada
+        String cadenaRoot = ""; 
         for (int x = 0; x < cadenaOriginal.length(); x++) {
             char caracterActual = cadenaOriginal.charAt(x);
-            // Si no es una letra del alfabeto entonces ponemos el char tal y como está
-            // y pasamos a la siguiente iteración
             if (!Character.isLetter(caracterActual)) {
-                cadenaRotada += caracterActual;
+                cadenaRoot += caracterActual;
                 continue;
             }
+            else {
+                int codigoAsciiDeCaracterActual = (int) caracterActual;
+                boolean esMayuscula = Character.isUpperCase(caracterActual);
+                int INICIO;
+                if(esMayuscula){INICIO = INICIO_MAYUSCULAS;} else {INICIO = INICIO_MINUSCULAS;}
+                int nuevaPosicionEnAlfabeto = ((codigoAsciiDeCaracterActual
+                        - INICIO + rotaciones)) % LONGITUD_ALFABETO;
+                int nuevaPosicionAscii = INICIO + nuevaPosicionEnAlfabeto;
+                cadenaRoot += Character.toString((char) nuevaPosicionAscii);
+            }
 
-            int codigoAsciiDeCaracterActual = (int) caracterActual;
-            boolean esMayuscula = Character.isUpperCase(caracterActual);
 
-            // La posición (1 a 26) que ocupará la letra después de ser rotada
-            // El % LONGITUD_ALFABETO se utiliza por si se pasa de 26. Por ejemplo,
-            // la "z", al ser rotada una vez da el valor de 27, pero en realidad debería
-            // regresar a la letra "a", y con mod hacemos eso ya que 27 % 26 == 1,
-            // 28 % 26 == 2, etcétera ;)
-            int nuevaPosicionEnAlfabeto = ((codigoAsciiDeCaracterActual
-                    - (esMayuscula ? INICIO_MAYUSCULAS : INICIO_MINUSCULAS)) + rotaciones) % LONGITUD_ALFABETO;
-            // Arreglar rotaciones negativas
-            if (nuevaPosicionEnAlfabeto < 0)
-                nuevaPosicionEnAlfabeto += LONGITUD_ALFABETO;
-            int nuevaPosicionAscii = (esMayuscula ? INICIO_MAYUSCULAS : INICIO_MINUSCULAS) + nuevaPosicionEnAlfabeto;
-            // Convertir el código ASCII numérico a su representación como símbolo o letra y
-            // concatenar
-            cadenaRotada += Character.toString((char) nuevaPosicionAscii);
         }
-        return cadenaRotada;
+        return cadenaRoot;
     }
 
     public static List<String> Controlador(List<String> listaCifrada) {
